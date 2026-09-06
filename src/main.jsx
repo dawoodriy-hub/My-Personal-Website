@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowUpRight, Code2, Cpu, Github, Sparkles, Terminal, Braces, Globe,
@@ -6,6 +6,7 @@ import {
   BookOpen, Layers3, Mail, ExternalLink, CircleDot
 } from 'lucide-react';
 import './styles.css';
+import './scroll.css';
 
 const projects = [
   { title: 'Dawood AI', tag: 'AI / PYTHON', text: 'An evolving playground for exploring AI ideas, prompts and practical experiments.', icon: BrainCircuit, status: 'Exploring', featured: true },
@@ -51,8 +52,36 @@ function App() {
 
   const closeMenu = () => setMenuOpen(false);
 
+  useEffect(() => {
+    const revealItems = document.querySelectorAll('[data-reveal]');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -45px 0px' });
+
+    revealItems.forEach((item) => revealObserver.observe(item));
+
+    const updateProgress = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+      document.documentElement.style.setProperty('--scroll-progress', progress);
+    };
+    updateProgress();
+    window.addEventListener('scroll', updateProgress, { passive: true });
+
+    return () => {
+      revealObserver.disconnect();
+      window.removeEventListener('scroll', updateProgress);
+    };
+  }, []);
+
   return (
     <div className="site">
+      <div className="scroll-progress" aria-hidden="true" />
       <div className="noise" />
       <div className="glow glow-a" />
       <div className="glow glow-b" />
@@ -114,7 +143,7 @@ function App() {
 
         <div className="scroll-cue"><ChevronDown size={16}/> scroll to explore</div>
 
-        <section id="about" className="section wrap">
+        <section id="about" className="section wrap" data-reveal>
           <SectionLabel number="01">ABOUT</SectionLabel>
           <div className="about-grid">
             <div><h2>Learn it.<br/><span>Build it.</span><br/>Make it real.</h2></div>
@@ -130,19 +159,19 @@ function App() {
           </div>
           <div className="principles-grid">
             {principles.map(({ icon: Icon, title, text }) => (
-              <article className="principle" key={title}><div className="principle-icon"><Icon size={19}/></div><h3>{title}</h3><p>{text}</p></article>
+              <article className="principle" data-reveal key={title}><div className="principle-icon"><Icon size={19}/></div><h3>{title}</h3><p>{text}</p></article>
             ))}
           </div>
         </section>
 
-        <section id="projects" className="section wrap projects-section">
+        <section id="projects" className="section wrap projects-section" data-reveal>
           <div className="section-head">
             <div><SectionLabel number="02">PROJECTS</SectionLabel><h2>Things I've <span>built.</span></h2></div>
             <p>Small projects.<br/>Real learning.<br/>More coming.</p>
           </div>
           <div className="project-grid">
             {projects.map(({ title, tag, text, icon: Icon, status, featured }, i) => (
-              <article className={`project ${featured ? 'featured' : ''}`} key={title} onClick={() => setActiveProject(title)}>
+              <article className={`project ${featured ? 'featured' : ''}`} data-reveal key={title} onClick={() => setActiveProject(title)}>
                 <div className="project-top"><div className="project-number">0{i + 1}</div><span className="status"><span/> {status}</span></div>
                 <div className="project-icon"><Icon size={22}/></div>
                 <div className="project-content"><span className="tag">{tag}</span><h3>{title}</h3><p>{text}</p></div>
@@ -153,14 +182,14 @@ function App() {
           <div className="projects-footer"><Star size={15}/> Every project starts as a question.</div>
         </section>
 
-        <section id="skills" className="section skills-section">
+        <section id="skills" className="section skills-section" data-reveal>
           <div className="wrap">
             <SectionLabel number="03">TOOLBOX</SectionLabel>
             <div className="skills-layout">
               <div className="skills-intro"><h2>Tools for<br/><span>thinking.</span></h2><p>Languages are tools. The real skill is learning how to use them to solve problems.</p><div className="skill-orb"><Cpu size={31}/><span>LEARN<br/>BUILD<br/>REPEAT</span></div></div>
               <div className="skill-list">
                 {skills.map(([name, desc, no, level]) => (
-                  <div className="skill" key={name}>
+                  <div className="skill" data-reveal key={name}>
                     <span className="skill-no">{no}</span><Code2 size={18}/><div><strong>{name}</strong><small>{desc}</small><div className="skill-bar"><span style={{width: `${level}%`}}/></div></div><b>{level}%</b>
                   </div>
                 ))}
@@ -169,28 +198,28 @@ function App() {
           </div>
         </section>
 
-        <section id="journey" className="journey section wrap">
+        <section id="journey" className="journey section wrap" data-reveal>
           <SectionLabel number="04">JOURNEY</SectionLabel>
           <h2>Just getting <span>started.</span></h2>
           <p className="journey-intro">There is no finish line in coding. The goal is to keep discovering what I can make next.</p>
           <div className="timeline">
-            {journey.map(([no, title, text], i) => <div key={no} className={`step ${i === journey.length - 1 ? 'future' : ''}`}><b>{no}</b><strong>{title}</strong><small>{text}</small><div className="step-dot"/></div>)}
+            {journey.map(([no, title, text], i) => <div key={no} data-reveal className={`step ${i === journey.length - 1 ? 'future' : ''}`}><b>{no}</b><strong>{title}</strong><small>{text}</small><div className="step-dot"/></div>)}
           </div>
         </section>
 
-        <section className="lab section wrap">
+        <section className="lab section wrap" data-reveal>
           <div className="lab-card">
             <div className="lab-copy"><SectionLabel number="05">CURRENT LAB</SectionLabel><h2>What I'm<br/><span>playing with.</span></h2><p>Python experiments. AI ideas. Web interfaces. Games. And probably a few bugs hiding somewhere.</p></div>
             <div className="lab-grid">
-              <div className="lab-item"><Terminal size={18}/><strong>Python</strong><span>scripts + games</span></div>
-              <div className="lab-item"><BrainCircuit size={18}/><strong>AI</strong><span>ideas + prompts</span></div>
-              <div className="lab-item"><Globe size={18}/><strong>Web</strong><span>React + design</span></div>
-              <div className="lab-item"><Code2 size={18}/><strong>Code</strong><span>Java + C++</span></div>
+              <div className="lab-item" data-reveal><Terminal size={18}/><strong>Python</strong><span>scripts + games</span></div>
+              <div className="lab-item" data-reveal><BrainCircuit size={18}/><strong>AI</strong><span>ideas + prompts</span></div>
+              <div className="lab-item" data-reveal><Globe size={18}/><strong>Web</strong><span>React + design</span></div>
+              <div className="lab-item" data-reveal><Code2 size={18}/><strong>Code</strong><span>Java + C++</span></div>
             </div>
           </div>
         </section>
 
-        <section id="contact" className="contact wrap">
+        <section id="contact" className="contact wrap" data-reveal>
           <div className="contact-inner">
             <div className="contact-copy"><SectionLabel number="06">CONTACT</SectionLabel><h2>Let's build<br/><em>something.</em></h2><p>Have an idea, a project, or just want to say hello?</p></div>
             <div className="contact-action"><a className="button primary large-button" href="https://github.com/dawoodriy-hub" target="_blank" rel="noreferrer"><Github size={18}/> Visit my GitHub <ExternalLink size={15}/></a><span>github.com/dawoodriy-hub</span></div>
