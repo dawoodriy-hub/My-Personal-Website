@@ -1,5 +1,7 @@
 # My Personal Website — dawoodweb.com
 
+[![Deploy to GitHub Pages](https://github.com/dawoodriy-hub/My-Personal-Website/actions/workflows/deploy.yml/badge.svg)](https://github.com/dawoodriy-hub/My-Personal-Website/actions/workflows/deploy.yml)
+
 A modern, responsive personal portfolio for **Dawood Riyazi**, showcasing coding projects, AI experiments, and a learning journey.
 
 ## ✨ Highlights
@@ -60,7 +62,7 @@ The repository contains `.github/workflows/deploy.yml`.
 
 On every push to `main`, GitHub Actions:
 
-1. Installs Node.js dependencies.
+1. Installs Node.js 24 and project dependencies.
 2. Runs the Vite production build.
 3. Uploads the `dist/` directory as a Pages artifact.
 4. Deploys the artifact to GitHub Pages.
