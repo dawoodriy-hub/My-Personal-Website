@@ -10,6 +10,7 @@ A modern, responsive personal portfolio for **Dawood Riyazi**, showcasing coding
 - Project showcase for Python, C++, Java, React and web development
 - Skills and learning journey sections
 - Accessible semantic HTML and reduced-motion support
+- GitHub Actions deployment to GitHub Pages
 - Ready for custom domain `dawoodweb.com`
 
 ## 🧰 Tech Stack
@@ -17,12 +18,15 @@ A modern, responsive personal portfolio for **Dawood Riyazi**, showcasing coding
 **Frontend:** React, JavaScript, HTML5, CSS3  
 **Programming:** Python, C++, Java  
 **Tooling:** Vite, npm, Git, GitHub  
-**Deployment:** Vercel, Netlify, GitHub Pages or another static host
+**Deployment:** GitHub Actions + GitHub Pages
 
 ## 📁 Structure
 
 ```text
 My Personal Website/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
 ├── public/
 │   └── favicon.svg
 ├── src/
@@ -50,13 +54,35 @@ npm run build
 npm run preview
 ```
 
-## 🌐 Custom domain
+## ⚙️ GitHub Actions deployment
 
-Point `dawoodweb.com` to the hosting provider you choose, then add the domain in that provider's project settings. HTTPS should be enabled by the hosting platform.
+The repository contains `.github/workflows/deploy.yml`.
+
+On every push to `main`, GitHub Actions:
+
+1. Installs Node.js dependencies.
+2. Runs the Vite production build.
+3. Uploads the `dist/` directory as a Pages artifact.
+4. Deploys the artifact to GitHub Pages.
+
+In GitHub, use **Settings → Pages → Build and deployment → Source → GitHub Actions**.
+
+## 🌐 Custom domain: dawoodweb.com
+
+Once GitHub Pages deployment is active:
+
+1. Open **Settings → Pages**.
+2. Set the custom domain to `dawoodweb.com`.
+3. At your domain registrar/DNS provider, add the DNS records GitHub recommends for the repository.
+4. Wait for DNS verification, then enable HTTPS.
+
+The GitHub Actions workflow handles site deployment; the DNS records must be managed at the domain provider.
 
 ## 🎯 Project philosophy
 
 This website is designed to grow with Dawood's coding journey. New projects can be added without redesigning the whole site.
+
+> Build. Experiment. Learn. Repeat.
 
 ## 📜 License
 
